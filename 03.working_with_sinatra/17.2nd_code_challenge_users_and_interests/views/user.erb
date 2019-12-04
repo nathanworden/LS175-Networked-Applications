@@ -1,0 +1,31 @@
+
+<title><%= @title %></title>
+
+<h1><%= @name.capitalize %></h1>
+<h4><%= @email %></h4>
+<h3>
+  <ul>
+    <%= "Interests:" %>
+  <% @interests.each do |interest| %>
+      <%= if not_last(interest)
+            "#{interest.capitalize}," 
+          else
+            "#{interest.capitalize}."
+          end
+              %>
+  <% end %>
+</ul>
+</h3>
+
+<h4>
+  Go to another friend's page:
+  <% other_friends = @users.keys.select {|friend| friend != @name} %>
+  <% other_friends.each do |friend| %>
+    <a href="/<%= friend %>"><%= friend %></a>
+  <% end %>
+</h4>
+
+
+<h3> 
+  <a href="/">home</a>
+</h3>

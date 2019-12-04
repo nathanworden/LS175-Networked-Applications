@@ -1,0 +1,9 @@
+
+  <h1>These are my friends!</h1>
+    <ul>
+    <% @users.each do |name, interests| %>
+      <li>
+        <a href="/<%= name %>" ><%= name.capitalize %></a>
+      </li>
+    <% end %>
+    </ul>
