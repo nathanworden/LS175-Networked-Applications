@@ -28,22 +28,11 @@ end
 
 # Calls the block for each chapter, passing that chapter's number, name, and
 # contents.
-def each_chapter(query)
+def each_chapter
   @contents.each_with_index do |name, index|
     number = index + 1
     contents = File.read("data/chp#{number}.txt")
-
-    paragraphs = contents.split("\n\n").map do |paragraph|
-      "<p>#{paragraph}</p>"
-    end
-
-    paragraphs.select! do |paragraph|
-      paragraph.include?(query)
-    end
-
-    paragraphs.each do |paragraph|
-      yield(number, name, contents, paragraph)
-    end
+    yield(number, name, contents)
   end
 end
 
@@ -52,10 +41,14 @@ end
 def chapters_matching(query)
   results = []
 
-  return results if !query || query.empty?
+  return results unless query
 
-  each_chapter(query) do |number, name, contents, paragraph|
-    results << {number: number, name: name, paragraph: paragraph} if contents.include?(query)
+  each_chapter do |number, name, contents|
+    matches = {}
+    contents.split("\n\n").each_with_index do |paragraph, index|
+      matches[index] = paragraph if paragraph.include?(query)
+    end
+    results << {number: number, name: name, paragraphs: matches} if matches.any?
   end
 
   results
@@ -68,9 +61,18 @@ end
 
 helpers do
   def in_paragraphs(text)
-    text.split("\n\n").map do |paragraph| 
-      "<p>#{paragraph}</p>"
+    text.split("\n\n").each_with_index.map do |line, index|
+      "<p id=paragraph#{index}>#{line}</p>"
     end.join
+  end
+
+  def bold_param(txt)
+    start_idx = txt.index(params[:query])
+    end_idx = start_idx + params[:query].length
+    word_idx = txt[start_idx...end_idx]
+    before_word = txt[0...start_idx]
+    after_word = txt[end_idx..-1]
+    "#{before_word}<strong>#{word_idx}</strong>#{after_word}"
   end
 end
 
