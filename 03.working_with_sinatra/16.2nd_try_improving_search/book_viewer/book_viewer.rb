@@ -33,17 +33,17 @@ def each_chapter(query)
     number = index + 1
     contents = File.read("data/chp#{number}.txt")
 
-    paragraphs = contents.split("\n\n").map do |paragraph|
-      "<p>#{paragraph}</p>"
-    end
+    # paragraphs = contents.split("\n\n").map do |paragraph|
+    #   "<p>#{paragraph}</p>"
+    # end
 
-    paragraphs.select! do |paragraph|
-      paragraph.include?(query)
-    end
+    # paragraphs.select! do |paragraph|
+    #   paragraph.include?(query)
+    # end
 
-    paragraphs.each do |paragraph|
+    # paragraphs.each do |paragraph|
       yield(number, name, contents, paragraph)
-    end
+    # end
   end
 end
 

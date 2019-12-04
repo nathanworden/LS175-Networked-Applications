@@ -15,11 +15,11 @@
       <% @results.each do |result| %>
         <li>
           <h4><%= result[:name] %></h4>
-        </li>
           <ul>
             <li><a href="/chapters/<%= result[:number] %>"><%= result[:paragraph] %></a>
             </li>
           </ul>
+        </li>
       <% end %>
     </ul>
   <% end %>
