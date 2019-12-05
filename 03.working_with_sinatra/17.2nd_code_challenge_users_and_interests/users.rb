@@ -14,13 +14,10 @@ helpers do
     interest != @interests.last
   end
 
-  def count_interests
-    num_interests = []
-    @users.each do |name, info|
-      num_interests << @users[name][:interests].count
+  def count_interests(users)
+    users.reduce(0) do |acc, (key, value)|
+      acc + value[:interests].size
     end
-
-    num_interests.sum
   end
 end
 

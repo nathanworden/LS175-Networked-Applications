@@ -11,5 +11,5 @@
   <body>
     <div>
       <%= yield %>
-      <p>There are <%= @num_users %>  users with a total of <%= count_interests %> interests.</p>
+      <p>There are <%= @num_users %>  users with a total of <%= count_interests(@users  ) %> interests.</p>
     </div>
