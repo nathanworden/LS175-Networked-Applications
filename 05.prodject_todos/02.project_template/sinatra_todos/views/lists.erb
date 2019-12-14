@@ -1,16 +1,28 @@
 
 <ul id="lists">
-  <% @lists.each_with_index do |list, index| %>
-    <li>
+  <% sort_lists(@lists) do |list, index| %>
+    <% if list_complete?(list) %>
+      <li class="<%= list_class(list) %>">
+    <% else %>
+      <li>
+    <% end %>
       <a href="/lists/<%= index %>">
         <h2><%= list[:name] %></h2>
-        <p><%= list[:todos].size %></p>
+        <p>
+          <%= todos_remaining_count(list) %> / <%= todos_count(list)%>
+        </p>
       </a>
     </li>
   <% end %>
 </ul>
 
 <% content_for :header_links do %>
-<p><a href="/lists/new">New List</a></p>
-<p><a href="/lists/delete">Delete Most Recent List </a></p>
+<p><a class="add" href="/lists/new">New List</a></p>
+  <ul>
+  <li>
+    <form class="delete" action="/lists/delete" method="">
+    <button type="submit">Delete Most Recent List </button>
+  </form>
+  </li>
+</ul>
 <% end %>
