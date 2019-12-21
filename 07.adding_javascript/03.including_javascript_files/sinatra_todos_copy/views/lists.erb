@@ -1,0 +1,24 @@
+
+<ul id="lists">
+  <% sort_lists(@lists) do |list| %>
+    <li class="<%= list_class(list) %>">
+      <a href="/lists/<%= list[:id] %>">
+        <h2><%= list[:name] %></h2>
+        <p>
+          <%= todos_remaining_count(list) %> / <%= todos_count(list) %>
+        </p>
+      </a>
+    </li>
+  <% end %>
+</ul>
+
+<% content_for :header_links do %>
+<p><a class="add" href="/lists/new">New List</a></p>
+  <ul>
+  <li>
+    <form class="delete" action="/lists/delete" method="">
+    <button type="submit">Delete Most Recent List </button>
+  </form>
+  </li>
+</ul>
+<% end %>
