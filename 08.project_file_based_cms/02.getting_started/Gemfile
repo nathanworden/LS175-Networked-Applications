@@ -7,4 +7,6 @@ gem "erubis"
 gem "minitest"
 gem "rack-test"
 
+gem "redcarpet"
+
 ruby "2.6.3"
