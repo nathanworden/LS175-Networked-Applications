@@ -2,6 +2,8 @@ require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubis"
 require "redcarpet"
+require 'rouge'
+require "rouge/plugins/redcarpet"
 
 require "sinatra/content_for"
 
@@ -10,10 +12,18 @@ configure do
   set :session_secret, 'super secret'
 end
 
-root = File.expand_path("..", __FILE__)
+def data_path
+  if Env["RACK_ENV"] == "test"
+    File.expand_path("../test/data", __FILE__)
+  else
+    File.expand_path("../data", __FILE__)
+  end
+end
+
+# root = File.expand_path("..", __FILE__)
 
 def render_markdown(text)
-  markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+  markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, fenced_code_blocks: true, highlight: true, underline: true, quote: true, prettify: true)
   markdown.render(text)
 end
 
@@ -29,14 +39,16 @@ def load_file_content(path)
 end
 
 get "/" do
-  @files = Dir.glob(root + "/data/*").map do |path|
-     File.basename(path)
+  pattern = File.join(data_path, "*")
+
+  @files = Dir.glob(pattern).map do |path|
+    File.basename(path)
   end
   erb :index
 end
 
 get "/:filename" do
-  file_path = root + "/data/" + params[:filename]
+  file_path = File.join(data_path, params[:filename])
 
   if File.exist?(file_path)
     load_file_content(file_path)
@@ -45,3 +57,34 @@ get "/:filename" do
     redirect "/"
   end
 end
+
+get "/:filename/edit" do
+  file_path = data_path + "/data/" + params[:filename]
+
+  @filename = params[:filename]
+  @content = File.read(file_path)
+
+  erb :edit
+end
+
+post "/:filename" do
+  file_path = data_path + "/data/" + params[:filename]
+
+  File.write(file_path, params[:content])
+
+  session[:message] = "#{params[:filename]} has been updated."
+  redirect "/"
+end
+
+
+
+
+
+
+
+
+
+
+
+
+

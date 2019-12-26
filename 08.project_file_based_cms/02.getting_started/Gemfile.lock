@@ -5,23 +5,26 @@ GEM
     erubis (2.7.0)
     minitest (5.13.0)
     multi_json (1.14.1)
-    rack (1.6.12)
-    rack-protection (1.5.5)
+    mustermann (1.0.3)
+    rack (2.0.8)
+    rack-protection (2.0.7)
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     redcarpet (3.5.0)
-    sinatra (1.4.8)
-      rack (~> 1.5)
-      rack-protection (~> 1.4)
-      tilt (>= 1.3, < 3)
-    sinatra-contrib (1.4.7)
-      backports (>= 2.0)
+    rouge (3.14.0)
+    sinatra (2.0.7)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.7)
+      tilt (~> 2.0)
+    sinatra-contrib (2.0.7)
+      backports (>= 2.8.2)
       multi_json
-      rack-protection
-      rack-test
-      sinatra (~> 1.4.0)
-      tilt (>= 1.3, < 3)
+      mustermann (~> 1.0)
+      rack-protection (= 2.0.7)
+      sinatra (= 2.0.7)
+      tilt (~> 2.0)
     tilt (2.0.10)
 
 PLATFORMS
@@ -32,7 +35,8 @@ DEPENDENCIES
   minitest
   rack-test
   redcarpet
-  sinatra (~> 1.4.7)
+  rouge
+  sinatra
   sinatra-contrib
 
 RUBY VERSION
