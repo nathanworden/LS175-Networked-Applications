@@ -59,7 +59,7 @@ get "/:filename" do
 end
 
 get "/:filename/edit" do
-  file_path = data_path + "/data/" + params[:filename]
+  file_path = File.join(data_path, params[:filename])
 
   @filename = params[:filename]
   @content = File.read(file_path)
@@ -68,7 +68,7 @@ get "/:filename/edit" do
 end
 
 post "/:filename" do
-  file_path = data_path + "/data/" + params[:filename]
+  file_path = File.join(data_path, params[:filename])
 
   File.write(file_path, params[:content])
 
