@@ -1,4 +1,4 @@
- # About page!
+  # About page!
 
 ####What about this page?
 
@@ -9,9 +9,6 @@ Or **this**?
 "Quote me."
 
 # Ruuby is...
-
-YOOOOOOO
-
 
 `code snippet`
 
@@ -36,4 +33,4 @@ p count_me("A very long sentence")
 
 ---
 
- 
+  

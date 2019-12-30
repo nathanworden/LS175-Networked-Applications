@@ -2,6 +2,7 @@ require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubis"
 require "redcarpet"
+
 require 'rouge'
 require "rouge/plugins/redcarpet"
 
@@ -13,7 +14,7 @@ configure do
 end
 
 def data_path
-  if Env["RACK_ENV"] == "test"
+  if ENV["RACK_ENV"] == "test"
     File.expand_path("../test/data", __FILE__)
   else
     File.expand_path("../data", __FILE__)
@@ -34,7 +35,7 @@ def load_file_content(path)
     headers["Content-Type"] = "text/plain"
     content
   when ".md"
-    render_markdown(content)
+    erb render_markdown(content)
   end
 end
 
@@ -45,6 +46,66 @@ get "/" do
     File.basename(path)
   end
   erb :index
+end
+
+get "/users/signin" do
+  erb :signin
+end
+
+post "/users/signin" do
+  if params[:username] == "admin" && params[:password] == "secret"
+    session[:username] = params[:username]
+    session[:messge] = "Welcome!"
+    redirect "/"
+  else
+    session[:message] = "Invalid credentials"
+    status 422
+    erb :signin
+  end
+end
+
+post "/users/signout" do
+  session.delete(:username)
+  session[:message] = "You have been signed out."
+  redirect "/"
+end
+
+get "/new" do
+  erb :new
+end
+
+post "/create" do
+  filename = params[:filename].to_s
+
+  if filename.size == 0
+    session[:message] = "A name is required."
+    status 422
+    erb :new
+  else
+    if filename[-4..-1] == ".txt"
+      filename
+    elsif filename[-3..-1] == ".md"
+      filename
+    else
+      filename += ".txt"
+    end
+    
+    file_path = File.join(data_path, filename)
+
+    File.write(file_path, "")
+    session[:message] = "#{params[:filename]} has been created."
+
+    redirect "/"
+  end
+end
+
+post "/:filename/delete" do
+  file_path = File.join(data_path, params[:filename])
+
+  File.delete(file_path)
+
+  session[:message] = "#{params[:filename]} has been deleted."
+  redirect "/"
 end
 
 get "/:filename" do
@@ -75,7 +136,6 @@ post "/:filename" do
   session[:message] = "#{params[:filename]} has been updated."
   redirect "/"
 end
-
 
 
 
