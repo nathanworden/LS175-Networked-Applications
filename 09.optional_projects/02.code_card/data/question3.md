@@ -1,4 +1,2 @@
 ### What is a block in Ruby?
-
 ---
-

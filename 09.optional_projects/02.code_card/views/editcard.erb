@@ -1,0 +1,22 @@
+
+<div class="container-md">
+  <div class="row">
+    <form method="post" action="/<%= @question_cardname %>">
+      <label for="content">Edit <b>question</b> for card <%= @question_cardname_display %>:</label>
+      <div class="col-lg">
+        <textarea name="content" id="content" rows="10" cols="80"><%= @question_content %> </textarea>
+      </div>
+      <button type="submit">Save Changes </button>
+    </form>
+  </div>
+
+  <div class="row">
+    <form method="post" action="/<%= @answer_cardname %>">
+      <label for="content">Edit <b>answer</b> for card <%= @answer_card_num %>:</label>
+      <div class="col-lg">
+        <textarea name="content" id="content" rows="10" cols="80"><%= @answer_content %></textarea>
+      </div>
+      <button type="submit">Save Changes </button>
+    </form>
+  </div>
+</div>

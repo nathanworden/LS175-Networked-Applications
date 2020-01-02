@@ -1,7 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+  $("#hide").click(function(){
+    $("p").toggle();
+  });
+  $("#show").click(function(){
+    $("p").toggle();
+  });
+});
+  </script>
+
 <div class="container-md">
       <div class="row">
         <div class="col-lg">
-          <%= @contents %>
+          <%= @question_contents %>
+          <button id="hide">Show/Hide Answer</button>
+          <p><%= @answer_contents %></p>
         </div>
       </div>
       <div class="row">
@@ -10,3 +26,5 @@
         <div class="col-lg">Hard (Cut the time interval in half)</div>
       </div>
     </div>
+
+</html>

@@ -1,12 +1,24 @@
-<div class="row">
-  <div class="col-sm">
-    <ul>
-      <% @directory.each do |basename, card| %>
-        <% if card.include?("<h3>") %>
-          <li><a href="/<%= basename %>"><%= card %></a></li>
-        <% end %>
-      <% end %>
-      <li><a href="/dumbcard"><%= "dumbcard" %></a></li>
-    </ul>  
+<div class="container-md">
+  <div class="row">
+    <div class="col-md">
+      <h6>Click on a card to edit it</h6>
+    </div>
   </div>
+  <div class="row">
+    <div class="col-sm">
+      <ul>
+        <% @directory.each do |basename, card| %>
+          <% if card.include?("<h3>") %>
+            <li><a href="/<%= basename %>/edit"><%= card %></a></li>
+          <% end %>
+        <% end %>
+        <li><a href="/dumbcard"><%= "dumbcard" %></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <h6>Add Card</h6>
+    </div>
 </div>
+

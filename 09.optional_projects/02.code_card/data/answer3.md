@@ -1,7 +1,5 @@
 The block is an argument to the method call passed in at method invocation time. In other words, our familiar method, `[1, 2, 3].each { |num| puts num }`, is actually passing in the block of code to the `Array#each` method.
 
-
-
 Blocks can take arguments, just like normal methods. But unlike normal methods, it won't complain about wrong number of arguments passed to it.
 
 Blocks return a value, just like normal methods.

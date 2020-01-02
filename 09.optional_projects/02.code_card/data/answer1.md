@@ -21,8 +21,8 @@ rover = Dog.new
 kitty = Cat.new
 
 rover.speak
-# => arf!
+=> arf!
 kitty.speak
-# => meow
+=> meow
 ```
 
