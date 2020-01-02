@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-sm">
+    <ul>
+      <% @directory.each do |basename, card| %>
+        <% if card.include?("<h3>") %>
+          <li><a href="/<%= basename %>"><%= card %></a></li>
+        <% end %>
+      <% end %>
+      <li><a href="/dumbcard"><%= "dumbcard" %></a></li>
+    </ul>  
+  </div>
+</div>

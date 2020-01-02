@@ -2,5 +2,10 @@ source "https://rubygems.org"
 
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'bootstrap', '~> 4.4.1'
+gem 'erubis'
+gem 'rack-test'
+gem 'minitest'
+gem 'redcarpet'
 
 ruby "2.6.3"
