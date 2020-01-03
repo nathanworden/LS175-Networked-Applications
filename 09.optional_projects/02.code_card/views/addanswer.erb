@@ -1,0 +1,20 @@
+
+<div class="container-md">
+  <div class="row">
+    <%= @question_contents %>
+  </div>
+<div class="row">
+    <form method="post" action="/addanswer">
+      <label for="add_answer">Enter <b>answer</b> for new card:</label>
+      <div class="col-md">
+        <textarea name="add_answer" id="add_answer" rows="10" cols="80"></textarea>
+      </div>
+      <button type="submit">Create</button>
+    </form>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <a href="/">Cancel</a>
+    </div>
+  </div>
+</div>

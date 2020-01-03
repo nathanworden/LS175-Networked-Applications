@@ -5,3 +5,5 @@ Blocks can take arguments, just like normal methods. But unlike normal methods, 
 Blocks return a value, just like normal methods.
 
 Blocks are a way to defer some implementation decisions to method invocation time. It allows method callers to refine a method at invocation time for a specific use case. It allows method implementors to build generic methods that can be used in a variety of ways.
+
+---

@@ -4,10 +4,10 @@
   <script>
     $(document).ready(function(){
   $("#hide").click(function(){
-    $("p").toggle();
+    $("#answer").toggle();
   });
   $("#show").click(function(){
-    $("p").toggle();
+    $("#answer").toggle();
   });
 });
   </script>
@@ -17,14 +17,28 @@
         <div class="col-lg">
           <%= @question_contents %>
           <button id="hide">Show/Hide Answer</button>
-          <p><%= @answer_contents %></p>
+          <div id="answer" style="display:none;"><%= @answer_contents %></div>
         </div>
       </div>
       <div class="row">
-        <div class="col-lg">That Was Easy (double the time until you show it to me again)</div>
-        <div class="col-lg">Medium (Keep the time interval the same)</div>
-        <div class="col-lg">Hard (Cut the time interval in half)</div>
+        <p></p>
+      </div>
+      <div class="row">
+        <div class="col-md">
+          <form method="post" action="/practice/nextcard/<%= @card_index %>">
+            <button type="submit">That was easy</button>
+          </form>
+        </div>
+        <div class="col-md">
+          <form method="post" action="">
+            <button type="submit">Medium</buttion>
+          </form>
+        </div>
+        <div class="col-md">
+          <form method="post" action="">
+            <button type="submit">Hard</buttion>
+          </form>
+        </div>
       </div>
     </div>
-
 </html>
