@@ -1,5 +1,2 @@
 ### What is polymorphism?
-
-
- ___
-    
+     

@@ -17,12 +17,16 @@
       <ul>
         <% @directory.each do |basename, card| %>
           <% if card.include?("<h3>") %>
-            <li><a href="/<%= basename %>/edit"><%= card %></a></li>
+            <li>
+                <a href="/<%= basename %>/edit">
+                  <%= card %>
+                </a>
+            </li>
+            <p> <%= @linespacer %></p>
           <% end %>
         <% end %>
       </ul>
     </div>
   </div>
-
 </div>
 

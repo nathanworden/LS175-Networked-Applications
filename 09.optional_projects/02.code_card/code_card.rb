@@ -2,6 +2,7 @@ require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubis"
 require "redcarpet"
+require "coderay"
 
 configure do
   enable :sessions
@@ -16,7 +17,47 @@ def data_path
   end
 end
 
+def toggle_show_today(params, card_name)
+  if params.key?("hard")
+    session[:questions][card_name][:show_today] = true
+  elsif params.key?("medium")
+    session[:questions][card_name][:show_today] = false
+  elsif params.key?("easy")
+    session[:questions][card_name][:show_today] = false
+  end
+end
+
+before do
+  pattern = File.join(data_path, "*")
+  directory = Dir.glob(pattern).map do |file_path|
+    [File.basename(file_path), {show_today: true, times_shown: 0}]
+  end.to_h
+
+  session[:num] = 1
+end
+
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+
+class CodeRayify < Redcarpet::Render::HTML
+  def block_code(code, language)
+    CodeRay.scan(code, language).div#(:line_numbers => :table)
+  end
+end
+
+def markdown_ruby(text)
+  coderayified = CodeRayify.new(:filter_html => true,
+                                :hard_wrap => true)
+  options = {
+    :fenced_code_blocks => true,
+    :no_intra_emphasis => true,
+    :autolink => true,
+    :strikethrough => true,
+    :lax_html_blocks => true,
+    :superscript => true
+  }
+  markdown_to_html = Redcarpet::Markdown.new(coderayified, options)
+  markdown_to_html.render(text)
+end
 
 get "/" do
   pattern = File.join(data_path, "*")
@@ -30,10 +71,22 @@ get "/" do
   session[:current_card_num] = rand(@directory.size)
   @start = session[:current_card_num]
 
+  puts session[:num]
+  @session_num = session[:num]
+  p "session"
+  p session
+
   erb :home
 end
 
 get "/aboutpage" do
+  puts session[:num]
+  @session_num = session[:num] 
+  p "about page session"
+  p session
+  session[:num] += 1
+  p session
+
   erb :aboutpage
 end
 
@@ -44,6 +97,8 @@ get "/cards" do
     file_contents = File.read(file_path)
     [File.basename(file_path), markdown.render(file_contents)]
   end
+
+  @linespacer = markdown.render("---")
 
   erb :cards
 end
@@ -88,24 +143,35 @@ post "/addanswer" do
   file_path = File.join(data_path, new_answer_name)
   File.write(file_path, params[:add_answer])
 
-session[:message] = "A new card has been created."
+  session[:message] = "A new card has been created."
 
   redirect "/cards"
 end
 
 
 post "/practice/nextcard/:current_card_num" do
-  pattern = File.join(data_path, "*")
-  @directory = Dir.glob(pattern).map do |file_path|
-    [file_path, File.basename(file_path), 10]
+  card_name = "question" + (params[:current_card_num].to_i + 1).to_s + ".md"
+
+  session[:questions][card_name][:times_shown] += 1
+  session[:testing] += 1
+  toggle_show_today(params, card_name)
+
+  today_cards = session[:questions].select {|question, data| data[:show_today] }
+  if today_cards.empty?
+    redirect "/finishstudy"
   end
 
-  questions = @directory.select {|filename| filename[1].include?("question")}
-  current_card_num = (params[:current_card_num].to_i + 1) % questions.size
+  lowest_rank = today_cards.values.map {|card_data| card_data[:times_shown] }.min
+  next_card = today_cards.select {|_, card| card[:times_shown] == lowest_rank }.first
 
-  "#{questions} random string, and current_card_num: #{current_card_num} "
-  
+  current_card_num = (next_card[0].scan(/\d/)[0].to_i - 1).to_s # 1 needs to be subtracted because we added 1 to get the card name, which aren't 0 indexed.
+
+  # "#{session[:questions]}"
   redirect "/practice/#{current_card_num}"
+end
+
+get "/finishstudy" do
+  "Congratulations! You have finished this deck for now."
 end
 
 get "/practice/:cardnum" do
@@ -129,7 +195,12 @@ get "/practice/:cardnum" do
 
   answer_file_path = File.expand_path("../data/#{@match_answer[0]}", __FILE__)
   answer_file_contents = File.read(answer_file_path)
-  @answer_contents = markdown.render(answer_file_contents)
+
+  @answer_contents = markdown_ruby(answer_file_contents)
+
+  @linespacer = markdown.render("---")
+
+  @session_questions = session[:questions]  # testing
 
   erb :viewcard
 end

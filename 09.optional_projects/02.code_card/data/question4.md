@@ -1,4 +1,1 @@
-### What is binding?
-
-
-___
+### What is binding? 

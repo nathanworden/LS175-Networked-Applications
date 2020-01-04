@@ -6,8 +6,8 @@
   $("#hide").click(function(){
     $("#answer").toggle();
   });
-  $("#show").click(function(){
-    $("#answer").toggle();
+  $("#info").click(function(){
+    $("#crdinfo").toggle();
   });
 });
   </script>
@@ -26,19 +26,32 @@
       <div class="row">
         <div class="col-md">
           <form method="post" action="/practice/nextcard/<%= @card_index %>">
-            <button type="submit">That was easy</button>
+            <button type="text" name="easy">That was easy</button>
           </form>
         </div>
         <div class="col-md">
-          <form method="post" action="">
-            <button type="submit">Medium</buttion>
+          <form method="post" action="/practice/nextcard/<%= @card_index %>">
+            <button type="text" name="medium">Medium</buttion>
           </form>
         </div>
         <div class="col-md">
-          <form method="post" action="">
-            <button type="submit">Hard</buttion>
+          <form method="post" action="/practice/nextcard/<%= @card_index %>">
+            <button type="submit" name="hard">Hard</buttion>
           </form>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md">
+          <div id="emptyspace"> <%= @linespacer %></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md">
+          <button id="info">Card Info</button>
+          <div id="crdinfo" style="display:none;"><%= "Words" %></div>
+        </div>
+      </div>
     </div>
+
+    <%= @session_questions %>
 </html>
