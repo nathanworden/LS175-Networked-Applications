@@ -25,5 +25,3 @@ rover.speak
 kitty.speak
 => meow
 ```
----
-

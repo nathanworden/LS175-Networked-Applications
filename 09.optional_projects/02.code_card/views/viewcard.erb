@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html>
-  <head>
-       <link rel="stylesheet" href="prism.css" />
-  </head>
-  <body>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script>
@@ -24,6 +20,7 @@
       <button id="hide">Show/Hide Answer</button>
       <div id="answer" style="display:none;">
         <%= @answer_contents %>
+      <pre><code class="language-ruby line-numbers"><%= @code_block %></code></pre>
       </div>
     </div>
   </div>
@@ -61,22 +58,8 @@
     </div>
   </div>
   <%= session[:questions] %>
-
-  <div class="row">
-  <div class="col-sm">
-    <pre><code class="language-ruby line-numbers">class Dog
-  def initialize(name)
-    @name = name
-  end
-end
-      </code>
-    </pre>
-  </div>
-</div>
 </div>
 
-  <script src="prism.js"></script>
-</body>
 </html>
 
 

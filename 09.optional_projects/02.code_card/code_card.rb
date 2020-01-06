@@ -1,5 +1,5 @@
 require "sinatra"
-require "sinatra/reloader"
+require "sinatra/reloader" if development?
 require "tilt/erubis"
 require "redcarpet"
 require "coderay"
@@ -85,8 +85,7 @@ get "/" do
 
   @directory = directory.select {|file| file.include?("question")}
 
-  session[:current_card_num] = rand(@directory.size) + 1
-  @start = session[:current_card_num]
+  session[:current_card_num] ||= rand(@directory.size) + 1
 
   erb :home
 end
@@ -163,7 +162,9 @@ post "/practice/nextcard/:current_card_num" do
 
   current_card_num = (next_card[0].scan(/\d/)[0]) 
 
-  redirect "/practice/#{current_card_num}"
+  session[:current_card_num] = current_card_num
+
+  redirect "/practice"
 end
 
 get "/finishstudy" do
@@ -172,19 +173,18 @@ get "/finishstudy" do
   erb :congrats
 end
 
-get "/practice/:cardnum" do
+get "/practice" do
   redirect "/finishstudy" if today_cards.empty?
 
   questions = session[:questions]#.keys.sort
   answers = session[:answers].keys.sort
 
-  @match_answer = answers.select {|file| (file.scan(/\d/).join).to_s  == params[:cardnum]}
+  @match_answer = answers.select {|file| (file.scan(/\d/).join)  == session[:current_card_num].to_s}
 
-  card_index = params[:cardnum].to_i
+  card_index = session[:current_card_num]
   @card_index = card_index
-  @cardname = questions[card_index]
 
-  @cardname = questions.select {|key, value| key.scan(/\d/).join.to_i == card_index }.keys[0]
+  @cardname = questions.select {|key, value| key.scan(/\d/).join == card_index.to_s }.keys[0]
   
   question_file_path = File.expand_path("../data/#{@cardname}", __FILE__)
   question_file_contents = File.read(question_file_path)
@@ -193,31 +193,33 @@ get "/practice/:cardnum" do
   answer_file_path = File.expand_path("../data/#{@match_answer[0]}", __FILE__)
   answer_file_contents = File.read(answer_file_path)
 
-  @answer_contents = markdown_ruby(answer_file_contents)
-
+  # @answer_contents = markdown_ruby(answer_file_contents)
   @linespacer = markdown.render("---")
 
-  # "#{params[:cardnum]}"
+  no_code, @code_block = answer_file_contents.split("```ruby")
 
-  erb :viewcard
+  @answer_contents = markdown_ruby(no_code)
+
+  "#{no_code} ----DARLING, I PACKED YOU LUNCH ---- #{@code_block}"
+  # erb :viewcard
 end
 
-get "/:cardname" do
-  cardname = params[:cardname]
-  file_path = File.expand_path("../data/#{cardname}", __FILE__)
-  # file_path = File.join(data_path, params[:cardname])
+# get "/:cardname" do
+#   cardname = params[:cardname]
+#   file_path = File.expand_path("../data/#{cardname}", __FILE__)
+#   # file_path = File.join(data_path, params[:cardname])
 
-  if File.file?(file_path)
-    # headers["Content-Type"] = "text/plain"
-    file_contents = File.read(file_path)
-    @contents = markdown.render(file_contents)
-  else
-    session[:message] = "#{params[:cardname]} does not exist."
-    redirect "/"
-  end
+#   if File.file?(file_path)
+#     # headers["Content-Type"] = "text/plain"
+#     file_contents = File.read(file_path)
+#     @contents = markdown.render(file_contents)
+#   else
+#     session[:message] = "#{params[:cardname]} does not exist."
+#     redirect "/"
+#   end
 
-  erb :viewcard
-end
+#   erb :viewcard
+# end
 
 post "/:cardname" do
   cardname = params[:cardname]

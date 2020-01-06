@@ -52,9 +52,12 @@ GEM
     multi_json (1.14.1)
     mustermann (1.1.0)
       ruby2_keywords (~> 0.0.1)
+    nio4r (2.5.2)
     nokogiri (1.10.7)
       mini_portile2 (~> 2.4.0)
     popper_js (1.14.5)
+    puma (4.3.1)
+      nio4r (~> 2.0)
     rack (2.0.8)
     rack-protection (2.0.7)
       rack
@@ -115,6 +118,7 @@ DEPENDENCIES
   coderay
   erubis
   minitest
+  puma
   rack-test
   redcarpet!
   sinatra
