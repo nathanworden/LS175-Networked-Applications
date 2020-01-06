@@ -6,7 +6,7 @@ GEM
     erubis (2.7.0)
     minitest (5.8.4)
     multi_json (1.12.1)
-    rack (1.6.4)
+    rack (1.6.12)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
