@@ -17,6 +17,7 @@ get "/" do
   p "session"
   p session
 
+
   erb :home
 end
 
