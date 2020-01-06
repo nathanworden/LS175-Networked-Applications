@@ -27,20 +27,37 @@ def toggle_show_today(params, card_name)
   end
 end
 
+def today_cards
+  session[:questions].select {|question, data| data[:show_today] }
+end
+
+def lowest_rank
+  today_cards.values.map {|card_data| card_data[:times_shown] }.min
+end
+
+def next_card
+  today_cards.select {|_, card| card[:times_shown] == lowest_rank }.first
+end
+
+def card_name_from_card_num(current_card_num)
+  "question" + params[:current_card_num] + ".md"
+end
+
 before do
   pattern = File.join(data_path, "*")
   directory = Dir.glob(pattern).map do |file_path|
     [File.basename(file_path), {show_today: true, times_shown: 0}]
   end.to_h
 
-  session[:num] = 1
+  session[:questions] ||= directory.select {|card| card.include?("question")}
+  session[:answers] ||= directory.select {|card| card.include?("answer")}
 end
 
 markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
 
 class CodeRayify < Redcarpet::Render::HTML
   def block_code(code, language)
-    CodeRay.scan(code, language).div#(:line_numbers => :table)
+    CodeRay.scan(code, language).div(:line_numbers => :table)
   end
 end
 
@@ -68,24 +85,13 @@ get "/" do
 
   @directory = directory.select {|file| file.include?("question")}
 
-  session[:current_card_num] = rand(@directory.size)
+  session[:current_card_num] = rand(@directory.size) + 1
   @start = session[:current_card_num]
-
-  puts session[:num]
-  @session_num = session[:num]
-  p "session"
-  p session
 
   erb :home
 end
 
 get "/aboutpage" do
-  puts session[:num]
-  @session_num = session[:num] 
-  p "about page session"
-  p session
-  session[:num] += 1
-  p session
 
   erb :aboutpage
 end
@@ -148,48 +154,39 @@ post "/addanswer" do
   redirect "/cards"
 end
 
-
 post "/practice/nextcard/:current_card_num" do
-  card_name = "question" + (params[:current_card_num].to_i + 1).to_s + ".md"
-
-  session[:questions][card_name][:times_shown] += 1
-  session[:testing] += 1
+  card_name = card_name_from_card_num(params[:current_card_num])
   toggle_show_today(params, card_name)
+  session[:questions][card_name][:times_shown] += 1
 
-  today_cards = session[:questions].select {|question, data| data[:show_today] }
-  if today_cards.empty?
-    redirect "/finishstudy"
-  end
+  redirect "/finishstudy" if today_cards.empty?
 
-  lowest_rank = today_cards.values.map {|card_data| card_data[:times_shown] }.min
-  next_card = today_cards.select {|_, card| card[:times_shown] == lowest_rank }.first
+  current_card_num = (next_card[0].scan(/\d/)[0]) 
 
-  current_card_num = (next_card[0].scan(/\d/)[0].to_i - 1).to_s # 1 needs to be subtracted because we added 1 to get the card name, which aren't 0 indexed.
-
-  # "#{session[:questions]}"
   redirect "/practice/#{current_card_num}"
 end
 
 get "/finishstudy" do
-  "Congratulations! You have finished this deck for now."
+  @congrats = "Congratulations! You have finished this deck for now."
+
+  erb :congrats
 end
 
 get "/practice/:cardnum" do
-  # root = File.expand_path("../data/*", __FILE__)
-  pattern = File.join(data_path, "*")
-  @directory = Dir.glob(pattern).map do |path|
-    File.basename(path)
-  end
+  redirect "/finishstudy" if today_cards.empty?
 
-  questions = @directory.select {|filename| filename.include?("question")}.sort
-  @answers = @directory.select {|filename| filename.include?("answer")}.sort
-  @match_answer = @answers.select {|file| (file.scan(/\d/).join.to_i - 1).to_s  == params[:cardnum]}
+  questions = session[:questions]#.keys.sort
+  answers = session[:answers].keys.sort
+
+  @match_answer = answers.select {|file| (file.scan(/\d/).join).to_s  == params[:cardnum]}
 
   card_index = params[:cardnum].to_i
   @card_index = card_index
-  cardname = questions[card_index]
+  @cardname = questions[card_index]
+
+  @cardname = questions.select {|key, value| key.scan(/\d/).join.to_i == card_index }.keys[0]
   
-  question_file_path = File.expand_path("../data/#{cardname}", __FILE__)
+  question_file_path = File.expand_path("../data/#{@cardname}", __FILE__)
   question_file_contents = File.read(question_file_path)
   @question_contents = markdown.render(question_file_contents)
 
@@ -200,7 +197,7 @@ get "/practice/:cardnum" do
 
   @linespacer = markdown.render("---")
 
-  @session_questions = session[:questions]  # testing
+  # "#{params[:cardnum]}"
 
   erb :viewcard
 end

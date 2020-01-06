@@ -13,45 +13,68 @@
   </script>
 
 <div class="container-md">
-      <div class="row">
-        <div class="col-lg">
-          <%= @question_contents %>
-          <button id="hide">Show/Hide Answer</button>
-          <div id="answer" style="display:none;"><%= @answer_contents %></div>
-        </div>
-      </div>
-      <div class="row">
-        <p></p>
-      </div>
-      <div class="row">
-        <div class="col-md">
-          <form method="post" action="/practice/nextcard/<%= @card_index %>">
-            <button type="text" name="easy">That was easy</button>
-          </form>
-        </div>
-        <div class="col-md">
-          <form method="post" action="/practice/nextcard/<%= @card_index %>">
-            <button type="text" name="medium">Medium</buttion>
-          </form>
-        </div>
-        <div class="col-md">
-          <form method="post" action="/practice/nextcard/<%= @card_index %>">
-            <button type="submit" name="hard">Hard</buttion>
-          </form>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md">
-          <div id="emptyspace"> <%= @linespacer %></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md">
-          <button id="info">Card Info</button>
-          <div id="crdinfo" style="display:none;"><%= "Words" %></div>
-        </div>
+  <div class="row">
+    <div class="col-lg">
+      <%= @question_contents %>
+      <button id="hide">Show/Hide Answer</button>
+      <div id="answer" style="display:none;">
+        <%= @answer_contents %>
       </div>
     </div>
+  </div>
+  <div class="row">
+    <p></p>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <form method="post" action="/practice/nextcard/<%= @card_index %>">
+        <button type="text" name="easy">That was easy</button>
+      </form>
+    </div>
+    <div class="col-md">
+      <form method="post" action="/practice/nextcard/<%= @card_index %>">
+        <button type="text" name="medium">Medium</buttion>
+      </form>
+    </div>
+    <div class="col-md">
+      <form method="post" action="/practice/nextcard/<%= @card_index %>">
+        <button type="submit" name="hard">Hard</buttion>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <div id="emptyspace"> <%= @linespacer %></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <button id="info">Card Info</button>
+      <div id="crdinfo" style="display:none;">
+        <%= "This card has been shown #{session[:questions][@cardname][:times_shown]} times." %>
+      </div>
+    </div>
+  </div>
+  <%= session[:questions] %>
 
-    <%= @session_questions %>
+  <div class="row">
+  <div class="col-sm">
+    <pre>
+      <code class="language-ruby line-numbers">
+      class Dog
+        def initialize(name)
+          @name = name
+        end
+      end
+      </code>
+    </pre>
+  </div>
+</div>
+</div>
+
+
 </html>
+
+
+
+
