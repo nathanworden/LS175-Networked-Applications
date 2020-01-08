@@ -13,14 +13,16 @@
   </div>
 
   <div class="row">
-    <div class="col-sm">
+    <div class="col-md">
       <ul>
         <% @directory.each do |basename, card| %>
-          <% if card.include?("<h3>") %>
-            <li>
-                <a href="/<%= basename %>/edit">
-                  <%= card %>
-                </a>
+          <% if basename.include?("question") %>
+            <li class="col-sm">
+              
+                <a href="/<%= basename %>/edit"><%= card %></a>
+                  <form class="col-sm offset-sm-10" method="post" action="/destroy/<%= basename %>">
+                  <button type="submit">Delete</button>
+                  </form>
             </li>
             <p> <%= @linespacer %></p>
           <% end %>

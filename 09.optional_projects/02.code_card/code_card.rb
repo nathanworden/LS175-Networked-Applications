@@ -167,6 +167,10 @@ post "/practice/nextcard/:current_card_num" do
   redirect "/practice"
 end
 
+post "/destroy/:basename" do
+  "You made it!"
+end
+
 get "/finishstudy" do
   @congrats = "Congratulations! You have finished this deck for now."
 
@@ -193,15 +197,14 @@ get "/practice" do
   answer_file_path = File.expand_path("../data/#{@match_answer[0]}", __FILE__)
   answer_file_contents = File.read(answer_file_path)
 
-  # @answer_contents = markdown_ruby(answer_file_contents)
   @linespacer = markdown.render("---")
 
-  no_code, @code_block = answer_file_contents.split("```ruby")
+  no_code, code_block = answer_file_contents.split("```ruby")
+  @code_block = code_block.split("```")[0] if code_block
 
   @answer_contents = markdown_ruby(no_code)
 
-  "#{no_code} ----DARLING, I PACKED YOU LUNCH ---- #{@code_block}"
-  # erb :viewcard
+  erb :viewcard
 end
 
 # get "/:cardname" do

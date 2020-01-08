@@ -20,7 +20,9 @@
       <button id="hide">Show/Hide Answer</button>
       <div id="answer" style="display:none;">
         <%= @answer_contents %>
+        <% if @code_block %>  
       <pre><code class="language-ruby line-numbers"><%= @code_block %></code></pre>
+        <% end %>
       </div>
     </div>
   </div>

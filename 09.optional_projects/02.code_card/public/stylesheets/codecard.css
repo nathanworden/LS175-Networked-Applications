@@ -1,0 +1,12 @@
+form.inline {
+  /*display: grid;*/
+  /*align-self: end;*/
+  /*width: 80%;*/
+  /*position: absolute;*/
+  /*font-family: 'handwriting';*/
+  font  : 1.3rem sans-serif;
+  /*border: 2px solid red;*/
+  background-color: #3CBC8D;
+  color: white;
+  position : relative;
+}
