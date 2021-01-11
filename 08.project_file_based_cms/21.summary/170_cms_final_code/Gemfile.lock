@@ -11,7 +11,7 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    redcarpet (3.5.0)
+    redcarpet (3.5.1)
     sinatra (1.4.7)
       rack (~> 1.5)
       rack-protection (~> 1.4)
